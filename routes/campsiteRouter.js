@@ -13,15 +13,37 @@ campsiteRouter
   })
   .post((req, res) => {
     res.end(
-      `Will add the campsite: ${req.body.name} with description: ${req.body.description}`
+      `Will add the campsite: ${req.body.name}\n with description: ${req.body.description}`
     );
   })
   .put((req, res) => {
-    res.status(403);
-    res.end('PUT opteration not supported on /campsites');
+    res.status(403).end(`${req.method} opteration not supported on /campsites`);
   })
   .delete((req, res) => {
     res.end('Deleting all campsites');
+  });
+
+campsiteRouter
+  .route('/:campsiteId')
+  .all((req, res, next) => {
+    res.status(200);
+    res.setHeader('Content-Type', 'text/plain');
+    next();
+  })
+  .get((req, res) => {
+    res.end(`Will send details of the campsite: ${req.params.campsiteId} to you`);
+  })
+  .post((req, res) => {
+    res.status(403).end(
+      `${req.method} operation not supported on /campsites/${req.params.campsiteId}`
+    );
+  })
+  .put((req, res) => {
+    res.write(`Updating the campsite: ${req.params.campsiteId}\n`)
+    res.end(`Will update the campsite: ${req.body.name}\n with ${req.body.description}`);
+  })
+  .delete((req, res) => {
+    res.end(`Deleting campsite: ${req.params.campsiteId}`);
   });
 
 module.exports = campsiteRouter;
